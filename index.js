@@ -47,22 +47,25 @@ time format compose with 5 strings
 \`\`\`
 `
 
+const sendCmdReply = (message, str) => message.channel.send(str).then(msg => msg.delete(config.cmdExpire))
+const sendAnnouncement = (message, str) => message.channel.send(str).then(msg => msg.delete(config.msgExpire))
+
 const bot = Bot(config, [
 
-	MessageCommand("ping", (message) => message.channel.send("pong")),
+	MessageCommand("ping", (message) => sendCmdReply(message, "pong")),
 
-	MessageCommand("help", (message) => message.channel.send(help)),
+	MessageCommand("help", (message) => sendCmdReply(message, help)),
 
 	MessageCommand("add", (message) => {
 		let args = getCommandArguments(message)
 		var task = Task(args[0], args.slice(1, 6).join(" "), args.slice(6).join(" "))
-		task.job = schedule.scheduleJob(task.time, () => message.channel.send(task.message))
+		task.job = schedule.scheduleJob(task.time, () => sendAnnouncement(message, task.message))
 		tasks.push(task)
-		message.channel.send("added")
+		sendCmdReply(message, "added")
 	}),
 
 	MessageCommand("list", (message) => {
-		message.channel.send("**--Tasks--**\n" + (tasks.map((t, i) => "#" + i + " " + t.toString()).join("\n")))
+		sendCmdReply(message, "**--Tasks--**\n" + (tasks.map((t, i) => "#" + i + " " + t.toString()).join("\n")))
 	}),
 
 	MessageCommand("remove", (message) => {
@@ -70,6 +73,6 @@ const bot = Bot(config, [
 		if(!isNumeric(index) || tasks[index] === void 0) return
 		schedule.cancelJob(tasks[index].job)
 		delete tasks[index]
-		message.channel.send("removed")
+		sendCmdReply(message, "removed")
 	})
 ]).start()
