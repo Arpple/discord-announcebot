@@ -72,7 +72,7 @@ const bot = Bot(config, [
 		let index = getCommandArguments(message)[0]
 		if(!isNumeric(index) || tasks[index] === void 0) return
 		schedule.cancelJob(tasks[index].job)
-		delete tasks[index]
+		tasks.splice(index, 1)
 		sendCmdReply(message, "removed")
 	})
 ]).start()
