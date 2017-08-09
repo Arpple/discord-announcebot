@@ -1,10 +1,13 @@
-import { MessageCommand, Bot } from "../src/bot"
+import { MessageCommand, Bot, channels } from "../src/bot"
+import * as assert from 'assert'
 
 let mockMessage = { content: "!command and other arguments", author: { bot: false } }
 let config = {
 	token: "",
 	prefix: "!",
 }
+
+let mockChannels = [1, 2]
 
 describe('Bot', () => {
 	describe("Message Handler", () => {
@@ -16,5 +19,11 @@ describe('Bot', () => {
 
 			bot._client.emit("message", mockMessage)
 		})
+	})
+	it("should set channels got from client", () => {
+		var bot = Bot(config, [])
+		bot._client.channels = mockChannels
+		bot._client.emit("ready")
+		assert.ok(channels !== undefined)
 	})
 })

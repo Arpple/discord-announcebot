@@ -12,6 +12,8 @@ export const MessageCommand = (command, callback) => {
 	}
 }
 
+export let channels = undefined
+
 /**
  * 
  * @param {Discord.Message} message 
@@ -29,7 +31,10 @@ export const Bot = (config, msgCommands) => {
 	const MsgHandler = (message) => {
 		if(message.author.bot || !message.content.startsWith(_config.prefix)) return 0
 
-		const isCmd = (cmd) => message.content.startsWith(_config.prefix + cmd)
+		const isCmd = (cmd) => {
+			return message.content.startsWith(_config.prefix + cmd)
+				&& (!_config.cmdFixedChannel || message.channel.id == _config.cmdChannelId)
+		}
 
 		const runCmd = (msgCmd) => {
 			if(isCmd(msgCmd.command)) msgCmd.callback(message)
@@ -40,6 +45,7 @@ export const Bot = (config, msgCommands) => {
 
 	_client.on('message', MsgHandler)
 	_client.on('ready', () => {
+		channels = _client.channels
 		console.log("Ready")
 	})
 

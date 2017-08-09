@@ -9,8 +9,18 @@ export let config = {
 	prefix: "!",
 
 	// auto delete bot command message time (millisec)
-	cmdExpire: 10000,
+	cmdExpire: 30000,
+
+	// only accept command from target channel
+	// if true, you need to specify id in `cmdChannelId`
+	cmdFixedChannel: false,
+	cmdChannelId: "",
 
 	// auto delete bot announce message time (millisec)
 	msgExpire: 1800000,
+
+	// only send message to target channel
+	// if true, you need to specify id in `msgChannelId`
+	msgFixedChannel: false,
+	msgChannelId: "",
 }

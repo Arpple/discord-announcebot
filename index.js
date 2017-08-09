@@ -1,5 +1,5 @@
 import { Task } from "./src/task"
-import { Bot, MessageCommand } from './src/bot'
+import { Bot, MessageCommand, channels } from './src/bot'
 import * as schedule from 'node-schedule'
 import { config } from './config/config'
 
@@ -48,7 +48,14 @@ time format compose with 5 strings
 `
 
 const sendCmdReply = (message, str) => message.channel.send(str).then(msg => msg.delete(config.cmdExpire))
-const sendAnnouncement = (message, str) => message.channel.send(str).then(msg => msg.delete(config.msgExpire))
+const sendAnnouncement = (message, str) => {
+	let channel
+	if(config.cmdFixedChannel)
+		channel = channels.get(config.msgChannelId)
+	else
+		channel = message.channel
+	channel.send(str).then(msg => msg.delete(config.msgExpire))
+}
 
 const bot = Bot(config, [
 
