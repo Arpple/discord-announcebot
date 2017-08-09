@@ -47,7 +47,7 @@ time format compose with 5 strings
 \`\`\`
 `
 
-const bot = Bot(config.token, [
+const bot = Bot(config, [
 
 	MessageCommand("ping", (message) => message.channel.send("pong")),
 
